@@ -49,4 +49,22 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, loginUser };
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id)
+    .select("-password")
+    .populate("likedSongs", "title artist duration")
+    .populate("likedAlbums", "title artist coverImage")
+    .populate("followedArtists", "name image")
+    .populate("followedPlaylists", "name creator coverImage");
+
+  if (user) {
+    res.status(StatusCodes.OK).json(user);
+  } else {
+    res.status(StatusCodes.NOT_FOUND);
+    throw new Error("User not Found");
+  }
+});
+
+const updateUserProfile = asyncHandler(async (req, res) => {});
+
+module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };

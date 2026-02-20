@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Song = require("./Song.js");
+const Album = require("./Album.js");
+const Artist = require("./Artist.js");
+const Playlist = require("./Playlist.js");
 
 const userSchema = new mongoose.Schema(
   {
