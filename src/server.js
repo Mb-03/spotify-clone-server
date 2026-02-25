@@ -6,6 +6,7 @@ dotenv.config();
 
 const connectedDB = require("./config/dbConnect.js");
 const userRouter = require("./routes/userRoutes.js");
+const artistRouter = require("./routes/artistRoutes.js");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.use("/api/users", userRouter);
+app.use("/api/artists", artistRouter);
 
 app.use((req, res, next) => {
   const error = new Error("Not Found - " + req.originalUrl);

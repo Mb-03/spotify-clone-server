@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User.js");
 const generateToken = require("../utils/generateToken.js");
+const uploadToCloudinary = require("../utils/cloudinaryUpload.js");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -65,6 +66,30 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const updateUserProfile = asyncHandler(async (req, res) => {});
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const { name, email, password } = req.body;
+  if (user) {
+    user.name = name || user.name;
+    user.email = email || user.email;
+    if (password) {
+      user.password = password;
+    }
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.path, "spotify/users");
+      user.profilePicture = result.secure_url;
+    }
+
+    const updatedUser = await user.save();
+    res.status(StatusCodes.OK).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      profilePicture: updatedUser.profilePicture,
+      isAdmin: updatedUser.isAdmin,
+    });
+  }
+});
 
 module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };

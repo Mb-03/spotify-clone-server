@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const Song = require("./Song.js");
+const Album = require("./Album.js");
+const Artist = require("./Artist.js");
+const Playlist = require("./Playlist.js");
 
 //Schema
 const artistSchema = new mongoose.Schema(
